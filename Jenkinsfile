@@ -1,8 +1,8 @@
-pipeline { 
+pipeline {
   agent any
   environment {
 
-    EMAIL_BODY = 
+    EMAIL_BODY =
 
     """
 
@@ -10,38 +10,38 @@ pipeline {
 
         <p>
 
-        View console output at 
+        View console output at
 
         "<a href="${env.BUILD_URL}">${env.JOB_NAME}:${env.BUILD_NUMBER}</a>"
 
-        </p> 
+        </p>
 
         <p><i>(Build log is attached.)</i></p>
 
     """
 
-    EMAIL_SUBJECT_SUCCESS = "Status: 'SUCCESS' -Job \'${env.JOB_NAME}:${env.BUILD_NUMBER}\'" 
+    EMAIL_SUBJECT_SUCCESS = "Status: 'SUCCESS' -Job \'${env.JOB_NAME}:${env.BUILD_NUMBER}\'"
 
-    EMAIL_SUBJECT_FAILURE = "Status: 'FAILURE' -Job \'${env.JOB_NAME}:${env.BUILD_NUMBER}\'" 
+    EMAIL_SUBJECT_FAILURE = "Status: 'FAILURE' -Job \'${env.JOB_NAME}:${env.BUILD_NUMBER}\'"
 
     EMAIL_RECEPIENT = 'mcherotichsitienei@gmail.com'
   }
-  tools { 
+  tools {
     gradle 'Gradle-6'
   }
-  stages { 
+  stages {
     stage('clone repository') {
-      steps { 
+      steps {
         git 'https://github.com/Mstienei/java-todo-jenkins'
       }
     }
     stage('Build project') {
-      steps { 
+      steps {
         sh 'gradle build'
       }
     }
     stage('Tests') {
-      steps { 
+      steps {
         sh 'gradle test'
       }
     }
@@ -51,12 +51,12 @@ pipeline {
           sh 'git push https://${HEROKU_CREDENTIALS}@git.heroku.com/vast-bayou-18595.git master'
         }
       }
-    } 
+    }
   }
   post {
       success {
-          emailext attachLog: true, 
-              body: EMAIL_BODY, 
+          emailext attachLog: true,
+              body: EMAIL_BODY,
 
               subject: EMAIL_SUBJECT_SUCCESS,
 
@@ -64,36 +64,12 @@ pipeline {
       }
 
       failure {
-          emailext attachLog: true, 
-              body: EMAIL_BODY, 
+          emailext attachLog: true,
+              body: EMAIL_BODY,
 
-              subject: EMAIL_SUBJECT_FAILURE, 
+              subject: EMAIL_SUBJECT_FAILURE,
 
               to: EMAIL_RECEPIENT
       }
   }
-A
-A
-A
-A
-A
-A
-A
-A
-A
-A
-A
-A
-A
-A
-A
-A
-A
-A
-A
-A
-A
-A
-A
-A
 }
